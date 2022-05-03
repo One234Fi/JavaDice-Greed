@@ -21,7 +21,7 @@ class Die {
     }
     
     //roll the die, update faceUp, and return the result
-    public int Roll() {
+    public int roll() {
         faceUp = (int) (Math.random() * faceCount) + 1;
         return faceUp;
     }
