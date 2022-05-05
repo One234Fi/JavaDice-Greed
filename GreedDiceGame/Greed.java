@@ -4,11 +4,12 @@ Ethan McCarthy
 Project: Greed
 Description: Class to hold the main method, will probably handle some Menuing and I/O
 */
+package greed;
 
 import java.util.*;
 
 public class Greed {
-    static Player[] players;
+    private static Player[] players;
     
     public static void main(String [] args) {
         Scanner sc = new Scanner(System.in);
@@ -20,10 +21,13 @@ public class Greed {
         players = initializePlayers(numPlayers, numCPUs);
         
         System.out.println(gameState());
+        
+        
+        TurnHandler.start();
     }
     
     //a string representing the current game state by calling each player's toString method, which contains all their scores
-    static String gameState() {
+    public static String gameState() {
         String s = "";
         for (int i = 0; i < players.length; i++) {
             s += "Player " + (i+1) + " " + players[i].toString() + "\n";
@@ -32,7 +36,7 @@ public class Greed {
     }
     
     //initialize the player array with a specified number of human and computer players
-    static Player[] initializePlayers(int numPlayers, int numCPUs) {
+    private static Player[] initializePlayers(int numPlayers, int numCPUs) {
         //create a temp array and make it at least 2 long or as long as the total number of players
         Player[] temp;
         int totalPlayers = numPlayers + numCPUs;
@@ -59,5 +63,9 @@ public class Greed {
         }
         
         return temp;
+    }
+    
+    public static Player[] getPlayerList() {
+        return players;
     }
 }

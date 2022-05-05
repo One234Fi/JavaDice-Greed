@@ -4,13 +4,17 @@ Ethan McCarthy
 Project: Greed
 Description: Player will have a "hand" of six dice, a score, and some functions
 */
+
+package greed;
+
 import java.util.*;
 
 class Player {
-    private int score = 0;
-    private Die[] dice;
+    protected int score = 0;
+    protected int turnScore = 0;
+    protected Die[] dice;
     //more flexibility in your rolling is available once you get on the board by scoring 1000 points 
-    private boolean onTheBoard;
+    protected boolean onTheBoard = false;
     
     Scanner sc = new Scanner(System.in);
     
@@ -19,11 +23,11 @@ class Player {
         for (int i = 0; i < handSize; i++) {
             dice[i] = new Die(6);
         }
-        onTheBoard = false;
     }
     
-    void addToScore (int val) {
-        score += val;
+    protected void addToScore () {
+        score += turnScore;
+        turnScore = 0;
     }
     
     public int getScore() {
@@ -33,16 +37,23 @@ class Player {
     //Prompt the user to take an action
     public void startTurn() {
         //System.out.println("Turn start! Your score is: " + score);
-        System.out.println("Type \"Roll\" or \"Pass\" to start your turn...");
-        parseAction(sc.next());
+        if (!onTheBoard) {
+            System.out.println("Type \"Roll\" to take your turn...");
+            parseAction(sc.next());
+        }
+        else {
+            System.out.println("Type \"Roll\" to begin rolling or \"Pass\" to skip your turn...");
+            parseAction(sc.next());
+        }
     }
     
     //a list of actions to take
-    void parseAction(String s) {
+    protected void parseAction(String s) {
         
         switch (s.toLowerCase()) {
-            case "pass": /*pass();*/ break;
-            case "roll": roll(); break;
+            case "pass": endTurn(); break;
+            case "roll": beginRoll(); break;
+            case "demoroll": roll(); break;
             
             
             default:    System.out.println("Invalid command!");
@@ -50,12 +61,13 @@ class Player {
         }
     }
     
-    void beginRoll() {
+    protected void beginRoll() {
+        int[] firstRoll = roll(6);
         
     }
     
     //roll all the dice and print the results
-    void roll() {
+    protected void roll() {
         int [] results = new int[dice.length];
         for (int i = 0; i < dice.length; i++) {
             results[i] = dice[i].roll();
@@ -65,9 +77,10 @@ class Player {
             System.out.print(results[i] + ", ");
         }
         System.out.println("");
+        startTurn();
     }
     
-    int[] roll(int diceToRoll) {
+    protected int[] roll(int diceToRoll) {
         int [] results = new int[dice.length];
         for (int i = 0; i < dice.length; i++) {
             results[i] = dice[i].roll();
@@ -76,7 +89,7 @@ class Player {
     }
     
     //get an integer from the user to indicate which dice to select for rolling
-    int dieSelection() {
+    protected int dieSelection() {
         System.out.println("Please indicate which dice to select by inputting a sequence of 1s and 0s, "
                 + "\n1s for selected dice and 0s for not selected dice. Example: 101100 to select the 1st, 3rd, and 4th dice");
         String attemptedSelection = sc.next();
@@ -94,6 +107,23 @@ class Player {
         }
         
         return 0;
+    }
+    
+    int calculateScore(int[] rollResult) {
+        int[] t = rollResult;
+        Arrays.sort(t);
+        
+        return 0;
+    }
+    
+    protected void forceEndTurn() {
+        turnScore = 0;
+        TurnHandler.endTurn();
+    }
+    
+    protected void endTurn() {
+        addToScore();
+        TurnHandler.endTurn();
     }
     
     String[] validResults = {"1", "5", "222", "333", "444", "666", "123456"};
