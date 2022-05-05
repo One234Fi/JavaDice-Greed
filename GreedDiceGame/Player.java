@@ -63,7 +63,34 @@ class Player {
     
     protected void beginRoll() {
         int[] firstRoll = roll(6);
+        while (isValidRoll(firstRoll)) {
+            printRoll(firstRoll);
+            //prompt for continuing
+            if (keepGoing) {
+                if (firstRollcontains5) {
+                    System.out.println("Roll your extra five?");
+                    if (yes) {
+                        turnScore -= 50;
+                        roll (numAvail + 1);
+                    }
+                    else {
+                        roll (numAvail)
+                    }
+                    
+                } 
+                else {
+                    roll(numAvail)
+                }
+                 
+            }
+            else {
+                endTurn();
+            }
+        }
         
+        //loop has stopped, invalid roll
+        printRoll(firstRoll);
+        forceEndTurn();
     }
     
     //roll all the dice and print the results
@@ -88,6 +115,25 @@ class Player {
         return results;
     }
     
+    protected boolean isValidRoll(int[] roll) {
+        int [] temp = roll;
+        Arrays.sort(temp);
+        String s = "";
+        for (int i = 0; i < temp.length; i++) {
+            s += temp[i];
+        }
+        
+        //check for certain sequences to see if the roll is valid
+        if (s.contains("123456")) {
+            return true;
+        }
+        if (s.contains("222") || s.contains("333") || s.contains("444")|| s.contains("666")) {
+            return true;
+        }
+        
+        return s.contains("1") || s.contains("5");
+    }
+    
     //get an integer from the user to indicate which dice to select for rolling
     protected int dieSelection() {
         System.out.println("Please indicate which dice to select by inputting a sequence of 1s and 0s, "
@@ -106,12 +152,36 @@ class Player {
             }
         }
         
-        return 0;
+        return -1;
     }
     
     int calculateScore(int[] rollResult) {
-        int[] t = rollResult;
-        Arrays.sort(t);
+        int[] temp = rollResult;
+        Arrays.sort(temp);
+        String s = "";
+        for (int i = 0; i < temp.length; i++) {
+            s += temp[i];
+        }
+        int placeHolder = 0;
+        
+        if (s.contains("123456")) {
+            return 1200;
+        }
+        if (s.contains("666")) {
+            s = s.replace("666", "");
+            placeHolder = 600;
+            for (int i = 0; i < 3; i++) {
+                
+            }
+            return 4800;
+        }
+        if (s.contains("555555")) {
+            return 4000;
+        }
+        if (s.contains()) {
+            return
+        }
+        
         
         return 0;
     }
@@ -127,6 +197,7 @@ class Player {
     }
     
     String[] validResults = {"1", "5", "222", "333", "444", "666", "123456"};
+    
     
     @Override
     public String toString() {
