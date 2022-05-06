@@ -5,11 +5,6 @@ Project: Greed
 Description: Class that holds most of the scoring methods
 */
 
-<<<<<<< HEAD
-=======
-package greed;
-
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
 import java.util.*;
 
 public class Roll {
@@ -39,7 +34,6 @@ public class Roll {
         return calculate(s);
     }
     
-<<<<<<< HEAD
     public static int numDiceAvail(String s) {
         if (s.equalsIgnoreCase("123456")) {
             return 0;
@@ -64,10 +58,6 @@ public class Roll {
     
     //takes a string, assuming it is sorted, then determines and returns the score value of the string
     public static int calculate(String s) {
-=======
-    //takes a string, assuming it is sorted, then determines and returns the score value of the string
-    private static int calculate(String s) {
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
         //System.out.println(s);
         if (s.equalsIgnoreCase("123456")) {
             return 1200;

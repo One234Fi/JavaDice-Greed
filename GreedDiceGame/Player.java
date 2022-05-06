@@ -90,10 +90,6 @@ class Player {
     
     protected void beginRoll() {
         int[] firstRoll = roll(6);
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-        
-=======
         String rollString;
         String answer;
         boolean turnContinue = true;
@@ -146,42 +142,6 @@ class Player {
             forceEndTurn();
         }
         
-=======
-        String rollString = rollToString(firstRoll);
-        String answer;
-        printRoll(firstRoll);
-        while (isValidRoll(rollString)) {
-            //prompt for continuing
-            System.out.println("Continue Turn? (Y/N)");
-            answer = sc.next();
-            if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("Yes")) {
-                int intermediateScore = Roll.computeScore(firstRoll);
-                if (rollString.contains("5") && (intermediateScore > 50) && (intermediateScore != 500)) {
-                    System.out.println("Roll your extra five? (Y/N)");
-                    answer = sc.next();
-                    if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("Yes")) {
-                        turnScore -= 50;
-                        roll (numAvail + 1);
-                    }
-                    else {
-                        roll (numAvail)
-                    }
-                    
-                } 
-                else {
-                    roll(numAvail)
-                }
-                 
-            }
-            else {
-                endTurn();
-            }
-        }
-        
-        //loop has stopped, invalid roll
-        printRoll(firstRoll);
-        forceEndTurn();
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
     }
     
     protected void printRoll(int [] roll) {
@@ -191,10 +151,6 @@ class Player {
         }
         s += "Score: " + Roll.computeScore(roll);
         System.out.println(s);
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
     }
     
     //roll all the dice and print the results
@@ -220,57 +176,6 @@ class Player {
         return results;
     }
     
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-    //Turns the int[] representation of a roll into an ordered string so its easier for other methods to manipulate
-    protected String rollToString(int [] roll) {
-        int [] temp = roll;
-        Arrays.sort(temp);
-        String s = "";
-        for (int i = 0; i < temp.length; i++) {
-            s += temp[i];
-        }
-        return s;
-    }
-    
-    //boolean that determines if a string representaion of a roll is valid
-    protected boolean isValidRoll(String roll) {
-        //check for certain sequences to see if the roll is valid
-        return (roll.contains("1") || roll.contains("5") || roll.contains("222") || roll.contains("333") || roll.contains("444")|| roll.contains("666"));
-    }
-    
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
-    //get an integer from the user to indicate which dice to select for rolling
-    protected int dieSelection() {
-        System.out.println("Please indicate which dice to select by inputting a sequence of 1s and 0s, "
-                + "\n1s for selected dice and 0s for not selected dice. Example: 101100 to select the 1st, 3rd, and 4th dice");
-        String attemptedSelection = sc.next();
-        boolean validSelection = false;
-        while (!validSelection) {
-            if (attemptedSelection.length() > 6 && attemptedSelection.matches("[0-1]+")) {
-                validSelection = true;
-                int selection = Integer.parseInt(attemptedSelection);
-                return selection;
-            }
-            else {
-                System.out.println("Invalid selection, please make sure your selection is 6 digits long and only contains 1s and 0s...");
-                attemptedSelection = sc.next();
-            }
-        }
-        
-        return -1;
-    }
-<<<<<<< HEAD
-    
-    int calculateScore(int[] rollResult) {
-        int[] t = rollResult;
-        Arrays.sort(t);
-        
-        return 0;
-    }
-    
-=======
     //Turns the int[] representation of a roll into an ordered string so its easier for other methods to manipulate
     protected String rollToString(int [] roll) {
         int [] temp = roll;
@@ -289,11 +194,6 @@ class Player {
     }
     
     //end the player's turn without adding to their total score
->>>>>>> Stashed changes
-=======
-     
-    //end the player's turn without adding to their total score
->>>>>>> fa6dfe9f55adbaef1d6a504210a103578fd38c3b
     protected void forceEndTurn() {
         turnScore = 0;
         TurnHandler.endTurn();
