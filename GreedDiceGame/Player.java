@@ -5,9 +5,10 @@ Project: Greed
 Description: Player will have a "hand" of six dice, a score, and some functions
 */
 
-package greed;
-
 import java.util.*;
+
+//TODO: add prints for invalid rolls, make the menuing better, add checkTotalScore and checkTurnScore actions, add check GameState action,
+
 
 class Player {
     protected int score = 0;
@@ -27,6 +28,14 @@ class Player {
     
     protected void addToScore () {
         score += turnScore;
+        if (score == 10000) {
+            TurnHandler.claimWin(this);
+        }
+        else if (score > 10000) {
+            System.out.println("Score is too high, you must have EXACTLY 10,000 points to win.");
+            score -= turnScore;
+            System.out.println("Score reverted to " + score);
+        }
         turnScore = 0;
     }
     
@@ -54,16 +63,98 @@ class Player {
             case "pass": endTurn(); break;
             case "roll": beginRoll(); break;
             case "demoroll": roll(); break;
-            
+            case "quit": quit(); break;
+            case "checkScore": checkScore(); break;
+            case "turnScore": checkTurnScore(); break;
             
             default:    System.out.println("Invalid command!");
                         startTurn();
         }
     }
     
+    protected void checkScore() {
+        System.out.println("Score: " + score);
+        startTurn();
+    }
+    
+    //finish this later, it'll have to be integrated into beginRoll()
+    protected void checkTurnScore() {
+        System.out.println();
+    }
+    
+    protected void quit() {
+        System.out.println("Quitting Game");
+        TurnHandler.exitGame();
+        System.out.println(Greed.gameState());
+    }
+    
     protected void beginRoll() {
         int[] firstRoll = roll(6);
+<<<<<<< Updated upstream
         
+=======
+        String rollString;
+        String answer;
+        boolean turnContinue = true;
+        
+        while (isValidRoll(rollToString(firstRoll)) && turnContinue) {
+            rollString = rollToString(firstRoll);
+            printRoll(firstRoll);
+            
+            //prompt for continuing
+            int numAvail = Roll.numDiceAvail(rollString);
+            if (numAvail == 0) {
+                numAvail = 6;
+            }
+            System.out.printf("Continue Turn by rolling your remaining %d dice? (Y/N)\n", numAvail);
+            answer = sc.next();
+            int intermediateScore = Roll.computeScore(firstRoll);
+            if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("Yes") || answer.equalsIgnoreCase("roll")) {
+                if (rollString.contains("5") && (intermediateScore > 50) && (numAvail != 6)) {
+                    System.out.println("Roll your extra five? (Y/N)");
+                    answer = sc.next();
+                    if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("Yes") || answer.equalsIgnoreCase("roll")) {
+                        rollString = rollString.replaceFirst("5", "");
+                        intermediateScore = Roll.calculate(rollString);
+                        turnScore += intermediateScore;
+                        firstRoll = roll(numAvail + 1);
+                    }
+                    else {
+                        firstRoll = roll(numAvail);
+                        turnScore += intermediateScore;
+                    }
+                } 
+                else {
+                    firstRoll = roll(numAvail);
+                    turnScore += intermediateScore;
+                }
+            }
+            else {
+                //choosing to stop
+                turnScore += intermediateScore;
+                System.out.printf("Turn end with score %d added to total score of: %d\n", turnScore, score);
+                turnContinue = false;
+                endTurn();
+            }
+        }
+        
+        //loop has stopped, invalid roll
+        if (!isValidRoll(rollToString(firstRoll))) {
+            printRoll(firstRoll);
+            System.out.println("INVALID ROLL!! Turn ended.");
+            forceEndTurn();
+        }
+        
+    }
+    
+    protected void printRoll(int [] roll) {
+        String s = "Roll result: ";
+        for (int i : roll) {
+            s += i + " ";
+        }
+        s += "Score: " + Roll.computeScore(roll);
+        System.out.println(s);
+>>>>>>> Stashed changes
     }
     
     //roll all the dice and print the results
@@ -81,13 +172,14 @@ class Player {
     }
     
     protected int[] roll(int diceToRoll) {
-        int [] results = new int[dice.length];
-        for (int i = 0; i < dice.length; i++) {
+        int [] results = new int[diceToRoll];
+        for (int i = 0; i < results.length; i++) {
             results[i] = dice[i].roll();
         }
         return results;
     }
     
+<<<<<<< Updated upstream
     //get an integer from the user to indicate which dice to select for rolling
     protected int dieSelection() {
         System.out.println("Please indicate which dice to select by inputting a sequence of 1s and 0s, "
@@ -116,6 +208,26 @@ class Player {
         return 0;
     }
     
+=======
+    //Turns the int[] representation of a roll into an ordered string so its easier for other methods to manipulate
+    protected String rollToString(int [] roll) {
+        int [] temp = roll;
+        Arrays.sort(temp);
+        String s = "";
+        for (int i = 0; i < temp.length; i++) {
+            s += temp[i];
+        }
+        return s;
+    }
+    
+    //boolean that determines if a string representaion of a roll is valid
+    protected boolean isValidRoll(String roll) {
+        //check for certain sequences to see if the roll is valid
+        return (roll.contains("1") || roll.contains("5") || roll.contains("222") || roll.contains("333") || roll.contains("444")|| roll.contains("666"));
+    }
+    
+    //end the player's turn without adding to their total score
+>>>>>>> Stashed changes
     protected void forceEndTurn() {
         turnScore = 0;
         TurnHandler.endTurn();
@@ -123,6 +235,7 @@ class Player {
     
     protected void endTurn() {
         addToScore();
+        System.out.println("Total Score: " + score);
         TurnHandler.endTurn();
     }
     

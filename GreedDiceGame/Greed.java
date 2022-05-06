@@ -4,7 +4,6 @@ Ethan McCarthy
 Project: Greed
 Description: Class to hold the main method, will probably handle some Menuing and I/O
 */
-package greed;
 
 import java.util.*;
 

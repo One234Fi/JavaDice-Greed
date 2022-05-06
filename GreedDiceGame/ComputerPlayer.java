@@ -5,8 +5,6 @@ Project: Greed
 Description: An implementation of player that performs actions autonomously
 */
 
-package greed;
-
 class ComputerPlayer extends Player {
     //private int score = 0;
     //private Die[] dice;

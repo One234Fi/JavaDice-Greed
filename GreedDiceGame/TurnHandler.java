@@ -5,58 +5,28 @@ Project: Greed
 Description: Kinda just a crappy state machine/monitor thing atm, supposed to manage the players taking turn eventually
 */
 
-package greed;
-
 public class TurnHandler {
-    
-    /*public static class Monitor {
-        static int currentTurn = 0;
-        
-        public void start() {
-            allowTurn(0, Greed.getPlayerList()[0]);
-        }
-        
-        //tell the player at "index" to take their turn
-        void allowTurn(int index, Player player) {
-            System.out.println("Player " + (index + 1) + "'s turn! Your score is " + player.getScore());
-
-            player.startTurn();
-            //turnToken = 0;
-        }
-        
-        
-        //move the turn pointer and call the method for the next turn
-        void incrementTurn() {
-            if (currentTurn < Greed.getPlayerList().length) {
-                currentTurn++;
-            }
-            else {
-                currentTurn = 0;
-            }
-            allowTurn(currentTurn, Greed.getPlayerList()[currentTurn]);
-        }
-
-        //this might be removed because of redundancy, if end of turn behaviour is added it won't be
-        public void endTurn() {
-            //turnToken = 1;
-            incrementTurn();
-        }
-        
-    }*/
-    
-    
-    //Player[] playerList;
     private static int currentTurn = 0;
-    private static int turnToken = 1;
-    
-    /*public TurnHandler(Player[] players) {
-        playerList = players;
-    }*/
-    
-    //send a message to a player to start their turn, then recieve said message to end it and move to next turn
     
     public static void start() {
         allowTurn(0);
+    }
+    
+    public static void exitGame() {
+        System.out.println("Game finished");
+    }
+    
+    public static void claimWin(Player p) {
+        if (p.score == 10000) {
+            int index = 0;
+            for (int i = 0; i < Greed.getPlayerList().length; i++) {
+                if (Greed.getPlayerList()[i].score == 10000) {
+                    index = i;
+                }
+            }
+            System.out.println("Player " + index + " wins!");
+            exitGame();
+        }
     }
     
     //tell the player at "index" to take their turn
@@ -68,7 +38,7 @@ public class TurnHandler {
     
     //move the turn pointer and call the method for the next turn
     private static void incrementTurn() {
-        if (currentTurn < Greed.getPlayerList().length) {
+        if (currentTurn < Greed.getPlayerList().length-1) {
             currentTurn++;
         }
         else {

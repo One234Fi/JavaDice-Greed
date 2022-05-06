@@ -5,8 +5,6 @@ Project: Greed
 Description: Class to implement the functionality of a die with an arbitrary amount of sides
 */
 
-package greed;
-
 class Die {
     //constant number of faces
     private final int faceCount;
