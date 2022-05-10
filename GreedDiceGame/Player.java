@@ -27,15 +27,28 @@ class Player {
     }
     
     protected void addToScore () {
-        score += turnScore;
-        if (score == 10000) {
-            TurnHandler.claimWin(this);
+        System.out.println("Adding " + turnScore + " to total score " + score);
+        if (onTheBoard) {
+            score += turnScore;
+            if (score == 10000) {
+                TurnHandler.claimWin(this);
+            }
+            else if (score > 10000) {
+                System.out.println("Score is too high, you must have EXACTLY 10,000 points to win.");
+                score -= turnScore;
+                System.out.println("Score reverted to " + score);
+            }
         }
-        else if (score > 10000) {
-            System.out.println("Score is too high, you must have EXACTLY 10,000 points to win.");
-            score -= turnScore;
-            System.out.println("Score reverted to " + score);
+        else {
+            if (turnScore >= 1000) {
+                onTheBoard = true;
+                score += turnScore;
+            }
+            else {
+                System.out.println("You need 1000 points or more for your score to get on the board");
+            }
         }
+        System.out.println("New Score: " + score);
         turnScore = 0;
     }
     
@@ -61,7 +74,7 @@ class Player {
         
         switch (s.toLowerCase()) {
             case "pass": endTurn(); break;
-            case "roll": beginRoll(); break;
+            case "roll": if (onTheBoard) { beginRoll(); } else { beginFirstRoll(); } break;
             case "demoroll": roll(); break;
             case "quit": quit(); break;
             case "checkScore": checkScore(); break;
@@ -88,7 +101,69 @@ class Player {
         System.out.println(Greed.gameState());
     }
     
-    protected void beginRoll() {
+    private void beginFirstRoll() {
+        int[] firstRoll = roll(6);
+        String rollString;
+        String answer;
+        boolean turnContinue = true;
+        
+        while (isValidRoll(rollToString(firstRoll)) && turnContinue) {
+            rollString = rollToString(firstRoll);
+            printRoll(firstRoll);
+            
+            //prompt for continuing
+            int numAvail = Roll.numDiceAvail(rollString);
+            if (numAvail == 0) {
+                numAvail = 6;
+            }
+            int intermediateScore = Roll.computeScore(firstRoll);
+            turnScore += intermediateScore;
+            if (turnScore < 1000) {
+                System.out.printf("Until you are on the board you must continue rolling until you are on the board with 1000 points or forfeit your turn\n");
+                System.out.println("Type pass or forfeit to skip your turn:");
+                System.out.println("Progress: " + turnScore + " Num Dice available: " + numAvail);
+                answer = sc.next();
+                if (answer.equalsIgnoreCase("pass") || answer.equalsIgnoreCase("forfeit") || answer.equalsIgnoreCase("n")) {
+                    forceEndTurn();
+                }
+                
+                //int intermediateScore = Roll.computeScore(firstRoll);
+                firstRoll = roll(numAvail);
+                //turnScore += intermediateScore;
+            }
+            else {
+                System.out.println("You're on the board! Continue rolling or end turn? \n Score: " + turnScore + " NumDice: " + numAvail);
+                answer = sc.next();
+                //intermediateScore = Roll.computeScore(firstRoll);
+                if (answer.equalsIgnoreCase("Y") || answer.equalsIgnoreCase("Yes") || answer.equalsIgnoreCase("roll")) {
+                    if (rollString.contains("5") && (intermediateScore > 50) && (numAvail != 6)) {
+                            firstRoll = roll(numAvail);
+                            //turnScore += intermediateScore;
+                    } 
+                    else {
+                        firstRoll = roll(numAvail);
+                        //turnScore += intermediateScore;
+                    }
+                }
+                else {
+                    //choosing to stop
+                    //turnScore += intermediateScore;
+                    System.out.printf("Turn end with score %d added to total score of: %d\n", turnScore, score);
+                    turnContinue = false;
+                    endTurn();
+                }
+            }
+        }
+        
+        //loop has stopped, invalid roll
+        if (!isValidRoll(rollToString(firstRoll))) {
+            printRoll(firstRoll);
+            System.out.println("INVALID ROLL!! Turn ended.");
+            forceEndTurn();
+        }
+    }
+    
+    private void beginRoll() {
         int[] firstRoll = roll(6);
         String rollString;
         String answer;

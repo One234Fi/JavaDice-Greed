@@ -31,6 +31,7 @@ public class TurnHandler {
     
     //tell the player at "index" to take their turn
     private static void allowTurn(int index) {
+        System.out.println("");
         System.out.println("Player " + (index + 1) + "'s turn! Your score is " + Greed.getPlayerList()[index].getScore());
         
         Greed.getPlayerList()[index].startTurn();
